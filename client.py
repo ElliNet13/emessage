@@ -3,6 +3,21 @@ import socket
 # Define constants for packet type
 MESSAGE_PACKET = 0
 
+def get(filename, input_prompt):
+    try:
+        # Attempt to open the file for reading
+        with open(filename, 'r') as file:
+            # If the file exists, return its content
+            return file.read()
+    except FileNotFoundError:
+        # If the file doesn't exist, ask the user for input
+        user_input = input(input_prompt)
+        # Write the user input to the file
+        with open(filename, 'w') as file:
+            file.write(user_input)
+        # Return the user input
+        return user_input
+
 # Function to send a message packet
 def send_message(sock, username, message):
     # Create packet data
@@ -35,18 +50,18 @@ def receive_message(sock):
     return username, message
 
 # Usage example
-def main():
+def main(username):
     # Create a TCP/IP socket
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         # Connect to server
         s.connect(('localhost', 12345))
 
         # Send a message
-        send_message(s, 'user1', 'Hello, world!')
+        send_message(s, username, input("message")
 
         # Receive a message
         username, message = receive_message(s)
         print(f"Received message from {username}: {message}")
 
 if __name__ == "__main__":
-    main()
+    main(get("username.txt","Enter your username: "))
