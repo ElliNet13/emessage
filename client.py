@@ -57,7 +57,7 @@ def main(username):
         s.connect(('localhost', 12345))
 
         # Send a message
-        send_message(s, username, input("message")
+        send_message(s, username, input("message"))
 
         # Receive a message
         username, message = receive_message(s)
