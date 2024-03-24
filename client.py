@@ -1,7 +1,10 @@
 import socket
+import threading
 
 # Define constants for packet type
 MESSAGE_PACKET = 0
+
+
 
 def get(filename, input_prompt):
     try:
@@ -55,13 +58,19 @@ def main(username):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         # Connect to server
         s.connect(('localhost', 12345))
+        messagesThread = threading.Thread(target=printMessages, args=(s,))
+        messagesThread.start()
 
         # Send a message
-        send_message(s, username, input("message"))
+        send_message(s, username, input("Enter your message: "))
 
-        # Receive a message
-        username, message = receive_message(s)
-        print(f"Received message from {username}: {message}")
+def printMessages(s):
+    while True:
+     username, message = receive_message(s)
+     print(f"Received message from {username}: {message}")
+
 
 if __name__ == "__main__":
-    main(get("username.txt","Enter your username: "))
+  username = get("username.txt","Enter your username: ")
+  while True:
+   main(username)
