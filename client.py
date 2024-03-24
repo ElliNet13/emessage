@@ -12,14 +12,19 @@ def get(filename, input_prompt):
         with open(filename, 'r') as file:
             # If the file exists, return its content
             return file.read()
-    except FileNotFoundError:
-        # If the file doesn't exist, ask the user for input
-        user_input = input(input_prompt)
-        # Write the user input to the file
-        with open(filename, 'w') as file:
-            file.write(user_input)
-        # Return the user input
-        return user_input
+    except FileNotFoundError as file_not_found_error:
+        print(f"FileNotFoundError: {file_not_found_error}")
+        try:
+            # If the file doesn't exist, ask the user for input
+            user_input = input(input_prompt)
+            # Write the user input to the file
+            with open(filename, 'w') as file:
+                file.write(user_input)
+            # Return the user input
+            return user_input
+        except (PermissionError, OSError) as file_write_error:
+            print(f"File write error: {file_write_error}")
+            return "No username"  # Handle the error gracefully, return None or another default value
 
 # Function to send a message packet
 def send_message(sock, username, message):
